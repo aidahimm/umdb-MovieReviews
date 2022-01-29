@@ -5,31 +5,35 @@ const Schema = mongo.Schema;
 const userSchema = new Schema ({
     userID:{
         type: String,
-        required: [true, 'Field is required']
+        required: [true, 'UserID is required']
     },
     email:{
         type: String,
-        required: [true, 'Field is required']
+        required: [true, 'Email is required']
     },
     password:{
         type: String,
-        required: [true, 'Field is required']
+        required: [true, 'Password is required']
     },
     name:{
         type: String,
-        required: [true, 'Field is required']
+        required: [true, 'Name is required']
     },
     surname:{
         type: String,
-        required: [true, 'Field is required']
+        required: [false]
     },
     country:{
         type: String,
-        required: [true, 'Field is required']
+        required: [false]
     },
     dob:{
         type: String,
-        required: [true, 'Field is required']
+        required: [false]
+    },
+    nFollowers: {
+        type: Number,
+        default: 0
     },
     isAdmin: {
         type: Boolean,
