@@ -18,18 +18,6 @@ let session = neo.session();
 
 //MongoDb
 // let driver = mongoDriver.Mongo();
-
 //listen on port
 app.listen(3000);
-
 module.exports = {};
-
-
-
-
-
-
-
-
-
-

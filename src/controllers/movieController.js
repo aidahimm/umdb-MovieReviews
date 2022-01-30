@@ -10,8 +10,4 @@ async function getMovie (req, res) {
         return res.status(400).json({ status: 400, message: e.message });
     }
 }
-
-
-
-
 module.exports = {getMovie};
