@@ -12,6 +12,16 @@ async function getMovie(){
     }
 }
 
+async function getAllMovies(){
+    try {
+        // Connect to the MongoDB cluster
+        let db = await mongoDriver.mongo();
+        return movies = await db.collection("movies").find().limit(10).toArray();
+    } catch (e) {
+        console.log(e);
+    }
+}
 
-module.exports = {getMovie};
+
+module.exports = {getMovie, getAllMovies};
 

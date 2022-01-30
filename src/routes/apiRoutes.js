@@ -5,11 +5,15 @@ const userController = require('../controllers/userController');
 const reviewController = require("../controllers/reviewController");
 
 router.get('/', (req,res)=>{
-    res.send("UMDb: Movie Reviews");
+    res.render('home');
 });
 
 router.get('/movie', (req,res)=>{
     movieController.getMovie(req,res).then();
+});
+
+router.get('/movies', (req,res)=>{
+    movieController.getAllMovies(req,res).then();
 });
 
 router.get('/user', (req,res)=>{
