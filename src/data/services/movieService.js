@@ -1,9 +1,8 @@
 const mongoDriver = require("../../Mongo");
 const request = require("request");
 
-
-var posters=[];
 var element = {};
+var posters = [];
 
 async function getMovie(){
     try {
@@ -21,7 +20,7 @@ async function getBody(body){
     posters.push(element);
 }
 
-async function getPosters(id){
+async function getPostersByID(id){
     request({
         uri: 'http://www.omdbapi.com/?',
         qs: {
@@ -39,7 +38,7 @@ async function getHomeMovies(){
         let movies = await db.collection("movies").find({numVotes: {$gte : 1100000}}).limit(30).toArray();
         for (let movie of movies){
             let id = movie.imdbId;
-            getPosters(id);
+            await getPostersByID(id);
         }
         return posters;
     } catch (e) {
@@ -47,5 +46,5 @@ async function getHomeMovies(){
     }
 }
 
-module.exports = {getMovie, getHomeMovies, getPosters};
+module.exports = {getMovie, getHomeMovies};
 
