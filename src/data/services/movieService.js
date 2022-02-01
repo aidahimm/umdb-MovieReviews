@@ -15,27 +15,31 @@ async function getMovie(){
     }
 }
 
-async function getbody(body){
+async function getBody(body){
     let json = JSON.parse(body);
     element={title: json["Title"], poster: json["Poster"]};
     posters.push(element);
 }
 
-async function getAllMovies(){
+async function getPosters(id){
+    request({
+        uri: 'http://www.omdbapi.com/?',
+        qs: {
+            apikey: '6fe3a4fe',
+            i: id
+        }
+    }, (err, res, body)=>{
+        getBody(body);
+    });
+}
+
+async function getHomeMovies(){
     try {
         let db = await mongoDriver.mongo();
         let movies = await db.collection("movies").find({numVotes: {$gte : 1100000}}).limit(30).toArray();
         for (let movie of movies){
             let id = movie.imdbId;
-            request({
-                uri: 'http://www.omdbapi.com/?',
-                qs: {
-                    apikey: '6fe3a4fe',
-                    i: id
-                }
-            }, (err, res, body)=>{
-                getbody(body);
-            });
+            getPosters(id);
         }
         return posters;
     } catch (e) {
@@ -43,5 +47,5 @@ async function getAllMovies(){
     }
 }
 
-module.exports = {getMovie, getAllMovies};
+module.exports = {getMovie, getHomeMovies, getPosters};
 

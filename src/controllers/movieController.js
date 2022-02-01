@@ -12,9 +12,9 @@ async function getMovie (req, res) {
     }
 }
 
-async function getAllMovies (req, res) {
+async function getHomeMovies (req, res) {
     try {
-        let movies = await moviesService.getAllMovies();
+        let movies = await moviesService.getHomeMovies();
         return res.render('index', { movies: movies, title: 'All movies' });
         //json({ movie: movie, message: "Service Executed Successfully" })
 
@@ -24,4 +24,4 @@ async function getAllMovies (req, res) {
 }
 
 
-module.exports = {getMovie, getAllMovies};
+module.exports = {getMovie, getHomeMovies};

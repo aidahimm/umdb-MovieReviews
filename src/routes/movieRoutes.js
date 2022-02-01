@@ -18,7 +18,7 @@ router.get('/apimovie', function(req, res) {
 });
 
 router.get('/movies', (req,res)=>{
-    movieController.getAllMovies(req,res).then();
+    movieController.getHomeMovies(req,res).then();
 });
 
 module.exports = router;
