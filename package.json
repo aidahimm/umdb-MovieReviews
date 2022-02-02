@@ -17,11 +17,24 @@
     "mongoose": "^6.1.8",
     "morgan": "~1.9.1",
     "neo4j-driver": "^4.4.1",
+    "path": "",
     "pg": "^8.5.1",
     "pg-hstore": "^2.3.3",
     "pug": "^3.0.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.6"
-  }
+  },
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aidahimm/umdb-MovieReviews.git"
+  },
+  "author": "ATA",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aidahimm/umdb-MovieReviews/issues"
+  },
+  "homepage": "https://github.com/aidahimm/umdb-MovieReviews#readme",
+  "description": ""
 }

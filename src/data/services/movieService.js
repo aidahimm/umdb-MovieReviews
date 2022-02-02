@@ -1,5 +1,6 @@
 const mongoDriver = require("../../Mongo");
 
+
 async function getMovie(){
     try {
         // Connect to the MongoDB cluster
@@ -21,7 +22,4 @@ async function getAllMovies(){
         console.log(e);
     }
 }
-
-
 module.exports = {getMovie, getAllMovies};
-

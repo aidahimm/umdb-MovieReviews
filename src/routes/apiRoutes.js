@@ -1,8 +1,11 @@
 const express = require('express');
 const router = express.Router();
+
 const movieController = require('../controllers/movieController');
 const userController = require('../controllers/userController');
 const reviewController = require("../controllers/reviewController");
+
+const adminController=require('../controllers/adminCotroller')
 
 router.get('/', (req,res)=>{
     res.render('home');
@@ -22,5 +25,8 @@ router.get('/user', (req,res)=>{
 
 router.get('/review', (req,res)=>{
     reviewController.getReview(req,res).then();
+});
+router.get('/admis', (req,res)=>{
+    reviewController.getAdmis(req,res).then();
 });
 module.exports = router;

@@ -1,6 +1,5 @@
 const moviesService = require("../data/services/movieService");
-
-
+///
 async function getMovie (req, res) {
     try {
         let movie = await moviesService.getMovie();
@@ -11,10 +10,7 @@ async function getMovie (req, res) {
         return res.status(400).json({ status: 400, message: e.message });
     }
 }
-<<<<<<< HEAD
-module.exports = {getMovie};
-=======
-
+///
 async function getAllMovies (req, res) {
     try {
         let movies = await moviesService.getAllMovies();
@@ -25,7 +21,4 @@ async function getAllMovies (req, res) {
         return res.status(400).json({ status: 400, message: e.message });
     }
 }
-
-
 module.exports = {getMovie, getAllMovies};
->>>>>>> c682c17033483e268405dba676d04a01c3cafcc8
