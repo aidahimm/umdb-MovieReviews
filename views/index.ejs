@@ -5,13 +5,14 @@
   <%- include("./partials/navBar.ejs") %>
 
   <div class="movies">
-    <h2>All Movies</h2>
 
     <% if (movies.length > 0) { %>
       <% movies.forEach(movie => { %>
+        <div class="home-posters">
+          <img class= "home-po" src=<%= movie.poster %>/>
           <h3 class="title"><%= movie.title %></h3>
-          <p class="snippet"><%= movie.genres %></p>
-        </a>
+<!--           <p class="snippet"><%= movie.genres %></p> -->
+        </div>
       <% }) %>
     <% } else { %>
       <p>There are no movies to display...</p>

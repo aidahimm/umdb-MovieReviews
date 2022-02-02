@@ -3,6 +3,8 @@ const express = require('express');
 const app = express();
 const neo4j = require ('neo4j-driver');
 const apiRoutes = require("./routes/apiRoutes");
+const userRoutes = require("./routes/userRoutes");
+const movieRoutes = require("./routes/movieRoutes");
 
 //Support the form-urlencoded format for the request body
 app.use(express.urlencoded({extended: true}));
@@ -15,11 +17,28 @@ app.set('view engine', 'ejs');
 app.use(express.static('stylesheets'));
 
 //For all routing not to  make this file crowded
-app.use('/', apiRoutes);
+app.get('/', (req,res)=>{
+    res.render('home');
+});
 
 app.get('/about',(req, res) => {
     res.render('about', { Title: 'About'});
+<<<<<<< HEAD
 })
+=======
+});
+
+app.get('/profile',(req, res) => {
+    res.render('profile', { Title: 'Your Profile'});
+});
+
+app.use('/mov', movieRoutes);
+
+app.use('/usr', userRoutes);
+
+app.use('', apiRoutes);
+
+>>>>>>> 70d7a0abf53ddf8813596e06def49f6df2042430
 app.use((req, res) => {
     res.status(404).render('404', { title: '404' });
 });

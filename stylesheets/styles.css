@@ -3,7 +3,7 @@ body{
     max-width: 1200px;
     margin: 20px auto;
     padding: 0 20px;
-    font-family: 'Noto Serif', serif;
+    font-family: 'Roboto', Arial, serif;
     max-width: 1200px;
 }
 p , h2{
@@ -64,6 +64,9 @@ h3{
 }
 
 /* index styles */
+.movies{
+    position: static;
+}
 .movies a{
     display: block;
     margin: 40px 0;
@@ -117,4 +120,31 @@ textarea{
     border: 0;
     font-size: 1.2em;
     cursor: pointer;
+}
+
+.home-posters{
+    font-size: 13px;
+    text-align: left;
+    float: left;
+    width: 180px;
+    height:300px;
+    border-radius: 5px;
+    margin-right: 10px;
+    margin-bottom: 10px
+}
+
+.home-po{
+    padding: 10px;
+    border-radius: 20px;
+    width: 160px;
+    height: 230px;
+}
+
+.navbar-logo{
+    padding-right: 10px;
+    height: 72px ;
+    width: 72px;
+}
+.site-title{
+    float:right;
 }

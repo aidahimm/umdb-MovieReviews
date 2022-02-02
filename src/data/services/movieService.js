@@ -1,25 +1,55 @@
 const mongoDriver = require("../../Mongo");
+const request = require("request");
+
+var element = {};
+var posters = [];
 
 
 async function getMovie(){
     try {
         // Connect to the MongoDB cluster
         let db = await mongoDriver.mongo();
-        let movieFound = await db.collection("movies").findOne({movieID:1});
-        console.log(movieFound);
-        return movieFound;
+        return await db.collection("movies").findOne({movieID: 1});
     } catch (e) {
         console.log(e);
     }
 }
 
-async function getAllMovies(){
+async function getBody(body){
+    let json = JSON.parse(body);
+    element={title: json["Title"], poster: json["Poster"]};
+    posters.push(element);
+}
+
+async function getPostersByID(id){
+    request({
+        uri: 'http://www.omdbapi.com/?',
+        qs: {
+            apikey: '6fe3a4fe',
+            i: id
+        }
+    }, (err, res, body)=>{
+        getBody(body);
+    });
+}
+
+async function getHomeMovies(){
     try {
-        // Connect to the MongoDB cluster
         let db = await mongoDriver.mongo();
-        return movies = await db.collection("movies").find().limit(10).toArray();
+        let movies = await db.collection("movies").find({numVotes: {$gte : 1100000}}).limit(30).toArray();
+        for (let movie of movies){
+            let id = movie.imdbId;
+            await getPostersByID(id);
+        }
+        return posters;
     } catch (e) {
         console.log(e);
     }
 }
+<<<<<<< HEAD
 module.exports = {getMovie, getAllMovies};
+=======
+
+module.exports = {getMovie, getHomeMovies};
+
+>>>>>>> 70d7a0abf53ddf8813596e06def49f6df2042430
