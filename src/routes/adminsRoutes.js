@@ -1,13 +1,12 @@
 
 const express = require('express');
 const router = express.Router();
-const movieController = require('../controllers/movieController');
+const adminController = require('../controllers/adminsController');
 var request = require('request');
 
-router.get('/movie', (req,res)=>{
-    movieController.getMovie(req,res).then();
+router.get('/admins', (req,res)=>{
+    adminController.getAdmins(req,res).then();
 });
-
 router.get('/apimovie', function(req, res) {
     request({
         uri: 'http://www.omdbapi.com/?',
@@ -17,8 +16,6 @@ router.get('/apimovie', function(req, res) {
         }
     }).pipe(res);
 });
+//
 
-router.get('/movies', (req,res)=>{
-    movieController.getHomeMovies(req,res).then();
-});
 module.exports = router;

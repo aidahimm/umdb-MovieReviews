@@ -1,7 +1,5 @@
 const {MongoClient} = require("mongodb");
-
 let client = null;
-
 
 async function mongo() {
     if (client == null) {
@@ -27,5 +25,4 @@ function close(){
     else
         client.close();
 }
-
 module.exports = {mongo, getCollection, close}

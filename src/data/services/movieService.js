@@ -46,10 +46,6 @@ async function getHomeMovies(){
         console.log(e);
     }
 }
-<<<<<<< HEAD
-module.exports = {getMovie, getAllMovies};
-=======
 
 module.exports = {getMovie, getHomeMovies};
 
->>>>>>> 70d7a0abf53ddf8813596e06def49f6df2042430

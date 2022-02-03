@@ -7,26 +7,17 @@ const adminsSchema = new Schema ({
         type: Number,
         required: [true, 'Admins Id  is required']
     },
-    title:{
+    name:{
         type: String,
-        required: [true, 'Title is required']
+        required: [true, 'Name is required']
     },
-    genres:{
+    dob:{
         type: String,
-        required: [true, 'Genre is required']
+        required: [true, 'DOB is required']
     },
-    imdbId:{
-        type: String,
-        required: [true, 'ImdbId is required']
-    },
-    avgRating:{
-        type: Number,
-        required: [false]
-    },
-    numVotes:{
-        type: Number,
-        required: [false]
-    }
+ 
+  
+   
 });
 
 const Admins = mongo.model('movie', adminsSchema);

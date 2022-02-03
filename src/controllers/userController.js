@@ -1,6 +1,5 @@
 const userService = require("../data/services/userService");
 
-
 async function getUser (req, res) {
     try {
         let user = await userService.getUser();
@@ -10,6 +9,4 @@ async function getUser (req, res) {
         return res.status(400).json({ status: 400, message: e.message });
     }
 }
-
-
 module.exports = {getUser};

@@ -10,13 +10,8 @@ async function getMovie (req, res) {
         return res.status(400).json({ status: 400, message: e.message });
     }
 }
-<<<<<<< HEAD
-///
-async function getAllMovies (req, res) {
-=======
 
 async function getHomeMovies (req, res) {
->>>>>>> 70d7a0abf53ddf8813596e06def49f6df2042430
     try {
         let movies = await moviesService.getHomeMovies();
         return res.render('index', { movies: movies, title: 'All movies' });
@@ -26,10 +21,6 @@ async function getHomeMovies (req, res) {
         return res.status(400).json({ status: 400, message: e.message });
     }
 }
-<<<<<<< HEAD
-module.exports = {getMovie, getAllMovies};
-=======
 
 
 module.exports = {getMovie, getHomeMovies};
->>>>>>> 70d7a0abf53ddf8813596e06def49f6df2042430
