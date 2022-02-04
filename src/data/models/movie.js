@@ -28,7 +28,5 @@ const movieSchema = new Schema ({
         required: [false]
     }
 });
-
 const Movie = mongo.model('movie', movieSchema);
-
 module.exports = Movie;
