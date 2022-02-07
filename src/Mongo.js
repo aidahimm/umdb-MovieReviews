@@ -1,6 +1,7 @@
 const {MongoClient} = require("mongodb");
 
-let client = null;
+var client = null;
+var db;
 
 
 async function mongo() {
@@ -9,7 +10,8 @@ async function mongo() {
         const uri = "mongodb://localhost:27017/";
         client = new MongoClient(uri);
         await client.connect();
-        return client.db('umdbMovies');
+        db = client.db('umdbMovies');
+        return db;
 
     } else return client.db('umdbMovies');
 }
