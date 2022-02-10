@@ -37,25 +37,16 @@ app.get('/profile',(req, res) => {
 app.use('/mov', movieRoutes);
 app.use('/usr', userRoutes);
 app.use('/admins', adminsRoutes);
+
+// call  the apiRoute here
 app.use('', apiRoutes);
 app.use((req, res) => {
     res.status(404).render('404', { title: '404' });
 });
 // Connecting to Databases
 //Neo4j
-let neo_driver = new neo4j.driver('bolt://localhost:7687', neo4j.auth.basic('neo4j', '123'));
-let neo_session = neo_driver.session(); //
-
-//neo_session
-//.run("CREATE (a:Person{name:'Menelik Tewodros'},title:'Emperror')")
-//.then(function(){
-//return neo_session.run("MATCH(a:Person) WHERE a.name='Arthur' RETURN a.name ")
-//})
-//.then(function(result){
- //   console.log(result.records[0].get(name)+result.records[0].get(title));
-//})
-//MongoDb
-// let driver = mongoDriver.Mongo();
+//let neo = new neo4j.driver('bolt://localhost:7687', neo4j.auth.basic('neo4j', '123'));
+//let session = neo.session();
 //listen on port
 app.listen(3000);
 console.log("Server atarted at port 3000");

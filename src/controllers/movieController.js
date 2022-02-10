@@ -1,6 +1,5 @@
 const moviesService = require("../data/services/movieService");
-
-
+///
 async function findMovieByID (req, res) {
     try {
         let movie = await moviesService.findMovieByID(req.body.movieID);
@@ -10,7 +9,7 @@ async function findMovieByID (req, res) {
         return res.status(400).json({ status: 400, message: e.message });
     }
 }
-
+///
 async function getHomeMovies (req, res) {
     try {
         let movies = await moviesService.getHomeMovies();
@@ -20,7 +19,7 @@ async function getHomeMovies (req, res) {
         return res.status(400).json({ status: 400, message: e.message });
     }
 }
-
+///
 async function findMovieByTitle (req, res) {
     try {
         let movies = await moviesService.findMovieByTitle(req.body.title);
@@ -30,7 +29,7 @@ async function findMovieByTitle (req, res) {
         return res.status(400).json({ status: 400, message: e.message });
     }
 }
-
+///
 async function findMovieByGenre (req, res) {
     try {
         let movies = await moviesService.findMovieByGenre(req.body.genre);
@@ -40,7 +39,7 @@ async function findMovieByGenre (req, res) {
         return res.status(400).json({ status: 400, message: e.message });
     }
 }
-
+///
 async function createMovie (req,res){
     try {
         await moviesService.createMovie(req.body.title, req.body.genres, req.body.imdbId, req.body.avgRating, req.body.numVotes);
@@ -50,7 +49,7 @@ async function createMovie (req,res){
         return res.status(400).json({ status: 400, message: e.message });
     }
 }
-
+///
 async function updateMovieRating (req, res) {
     try {
         await moviesService.updateMovieRating(req.body.movieID, req.body.rating);
@@ -60,7 +59,7 @@ async function updateMovieRating (req, res) {
         return res.status(400).json({ status: 400, message: e.message });
     }
 }
-
+///
 async function deleteMovie(req, res) {
     try {
         await moviesService.deleteMovie(req.body.movieID);
@@ -70,5 +69,5 @@ async function deleteMovie(req, res) {
         return res.status(400).json({ status: 400, message: e.message });
     }
 }
-
+///
 module.exports = {findMovieByID, getHomeMovies, findMovieByTitle, createMovie, findMovieByGenre, updateMovieRating, deleteMovie};

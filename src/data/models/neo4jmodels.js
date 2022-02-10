@@ -1,3 +1,5 @@
+
+
 const mongo = require("mongoose");
 
 const Schema = mongo.Schema;
@@ -28,5 +30,5 @@ const movieSchema = new Schema ({
         required: [false]
     }
 });
-const Movie = mongo.model('movie', movieSchema);
-module.exports ={Movie};
+const Neo4jMovie = mongo.model('movie', movieSchema);
+module.exports ={Neo4jMovie};

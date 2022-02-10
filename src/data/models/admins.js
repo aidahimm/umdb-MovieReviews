@@ -14,12 +14,9 @@ const adminsSchema = new Schema ({
     dob:{
         type: String,
         required: [true, 'DOB is required']
-    },
- 
-  
+    }, 
    
 });
 
 const Admins = mongo.model('movie', adminsSchema);
-
 module.exports = Admins;

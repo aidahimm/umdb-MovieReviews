@@ -118,3 +118,4 @@ async function MovieInLWatchlists(id){
 }
 module.exports = {getHomeMovies, findMovieByID,findMovieByTitle, findMovieByGenre, createMovie, updateMovieRating, deleteMovie};
 
+//{findMovieByID, getHomeMovies, findMovieByTitle, createMovie, findMovieByGenre, updateMovieRating, deleteMovie};
