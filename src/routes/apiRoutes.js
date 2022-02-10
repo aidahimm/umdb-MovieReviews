@@ -16,8 +16,8 @@ router.get('/admis', (req,res)=>{
 ///// Neo4j Routes
 //count the number of nodes in the Neo4j database
 router.get('/neo4j_get', async function (req, res, next) {
-    let result = await neo4j_calls.count_nodes();
-    console.log("RESULT IS", result)
+    let result = await neo4j_calls.count_all_nodes();
+    console.log("All nodes are", result)
     res.status(200).send({ result })    //Can't send just a Number; encapsulate with {} or convert to String.     
     return { result };
 })
