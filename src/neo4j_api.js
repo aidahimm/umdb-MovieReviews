@@ -1,7 +1,9 @@
+//
 let neo4j = require('neo4j-driver');
 let {creds } = require("./../config/noe4jcredentials");
 let neo4jdbconnection = neo4j.driver(creds.bolt_url, neo4j.auth.basic(creds.neo4j_username, creds.neo4j_password));
-//////// get
+
+/////get all nodes in the neo4j databse.
 async function count_all_nodes() {
     let session = neo4jdbconnection.session();
     const num_nodes = await session.run('MATCH (n) RETURN n', {
@@ -10,29 +12,55 @@ async function count_all_nodes() {
     console.log("RESULT", (!num_nodes ? 0 : num_nodes.records.length));
     return (!num_nodes ? 0 : num_nodes.records.length);
 };
-
-///add relationships between users. post
-async function userFollowsUser(user1,user2){
-    let session = neo4jdbconnection.session();
-    let result= await session.run(
-    `MATCH (user1:User { name:"${user1}"}), (user1:User { name:  "${user2}"} " }) CREATE (user1)-[:FOLLOWS]->(user1)`
-);
+// ***************************************************
+//                                                    
+//    Basic  Relations in the Neo4j Database     *****
+//                                                    
+// ***************************************************
+//user follows user`    
+async function user_follows_user(user1_id,user2_id){
+let session=neo4jdbconnection.session();
+    await session.run(
+        `MERGE(u1:User{id:"${user1_id}"}) MERGE(u2:User{id:"${user2_id}"}) MERGE(u1)-[rtf:FOLLOWS]->(u1)`
+    );
+    session.close;
+    return `user of id: ${user1_id} starts to Follow user of id:  ${user2_id}`;
 }
-/////////*****************************************///////////
-///////        Getter methods          //////////////////////
-////////*****************************************///////////
-//// get single user by name
+//user follows a watchlist
+async function user_follows_watchlist(user_id,watchlist_id){
+let session=neo4jdbconnection.session();
+await session.run(
+    `MERGE(u:User{"${user_id}"}) MERGE(wl:Watchlist{"${watchlist_id}"}) MERGE(u)-[rtf:FOLLOWS]->(wl)`
+);
+session.close;
+return `user of id: ${user_id} starst to follow a watchlist of id:`;
+}
+//  rates a movie
+async function user_rates_movie(user_id,movie_id){
+let session=neo4jdbconnection.session();
+await session.run(
+    `MERGE(u:User{"${user_id}"}) MERGE(m:Movie"${movie_id}") `
+
+);
+session.close; 
+}
+
+/// get single user by name
 async function get_single_user_by_name(){
     let session = neo4jdbconnection.session();
+    await session.run(
 
+    );
+    session.close;
 }
-//add user
+///add user node to the databse
 async function add_user (personName) {
     let session = neo4jdbconnection.session();
     try {
        let result= await session.run(
                `MERGE (n:User {name: "${personName}"}) RETURN n`
         );
+        session.close();
      return result;
     }
     catch(err){
@@ -40,39 +68,46 @@ async function add_user (personName) {
         //return result;
     }
 }
-//add movie
-
-async function add_movie (movieID) {
+///add a movie node  to the neo4j database
+async function add_movie (movie_id) {
     let session = neo4jdbconnection.session();
     try {
-       let result= await session.run(
-               `MERGE (n:Movie {name: "${movieID}"}) RETURN n`
+        await session.run(
+               `MERGE (n:Movie {name: "${movie_id}"}) RETURN n`
         );
-     return result;
+    session.close();
+     return `A movie with id: ${movie_id}  is created`;
     }
     catch(err){
         console.error('cant add movie due to', err);
         //return result;
     }
 }
-
-
-//add watchlist(?)
-
-
-
-/// get multiple users by name
-async  function get_multiple_user_by_name(){
-    let session = neo4jdbconnection.session();
-    
+///add a watchlist node to the databse.
+async function add_watchlist(watchlistID){
+    const session =neo4jdbconnection.session();
+    await session.run(
+        `MERGE (w:Watchlist{id:"${watchlistID}"} RETURN r) `
+     );
+     session.close();
+     return `a watch list with id ${watchlistID} is created successfully`;
 }
-/// get the total nuber of folloers of a user
+///get multiple users by name
+async  function get_multiple_user_by_name(){
+    let session = neo4jdbconnection.session();   
+    await session.run(
+
+    );
+    session.close();
+}
+///get the total number of followers of a user
 async function get_total_followers(userid){
     let session=neo4jdbconnection.session();
     try{
         const results =await session.run(
             `MATCH(u:User{id:"${userid}"})<-[FOLLOWS]-() RETURN COUNT(FOLLOWS) AS FOLLOWERS `
         );
+        session.close();
         return results.records.map((r)=>{
         const numfollowers=r.get('FOLLOWERS')
         return numfollowers.low
@@ -80,46 +115,112 @@ async function get_total_followers(userid){
     }
     catch(err){
         console.error('Cant get the total users due to ',err);
-
     }
 }
-// users like a movie
+
+//delete an individual user  node from database 
+async function delete_user(userid){
+    const session =neo4jdbconnection.session();
+    const result =await  session.run(
+        `MATCH(u:User{${userid}) DELETE `
+    );
+    session.close();
+}
+
+//user un-follows user
+ async function user_unfollow_user(user1_id,user2_id){
+    const session=neo4jdbconnection.session();
+    await session.run(
+        ``
+
+    );
+    session.close();
+ }
+//user un-follows watch list
+async function user_unfollow_watchlist(user_id,watchlist_id){
+const session=neo4jdbconnection.session();
+session.run(
+`MATCH(u:User{"${user_id}"})-[rtf:FOLLOW]-(wl:Watchlist{"${watchlist_id}"}) 
+delete rtf`
+);
+}
+
+//user unrate movie
+async function user_unrate_movie(){
+
+  
+}
+
+//user delete a watchlist
+async function user_delete_watchlist(){
+
+}
+
+// update user node details
+async function update_user(userid){
+const session =neo4jdbconnection.session();
+await session.run(
+`MERGE (u:User) SET `
+);
+}
+
+//update movie node details
+async function update_movie(){
+    const session=neo4jdbconnection.session();
+    await session.run(
+
+    );
+}
 
 
 
+//delete  all  users
+async function delete_all_users(){
+    const session=neo4jdbconnection.session();
 
 
-//user follows user
+}
+// delete_movie,
+async function delete_all_movie(){
+    const session=neo4jdbconnection.session();
+    session.run(
+        ``
+    );
 
 
+}
+//delete_watchlist
+async function delete_watchlist(){
+    const session=neo4jdbconnection.session();
+    session.run(
+        ``
 
+    );
+}
+//delete_all_watchlist
+async function delete_all_watchlist(){
+    const session=neo4jdbconnection.session();
+    session.run(
+        ``
+    );
 
-//a user's watchlist
-
+}
 
 
 //delete all nodes form neo4j databse
 async function delete_all_nodes(){
-const session=neo4jdbconnection.session();
-try{
-    const results=await session.run(
-    `MATCH(n) DETACH DELETE (n)`
-    )
-    return 'All nodes are deleted successfully';
-}
-catch( err){
-    console.error('Cant delete the all noded due to ', err);
-}
-}
-//delete an individual user
-async function delete_single_user(userid){
-    const session =neo4jdbconnection.session();
-    const result =await  session.run(
-        `MATCH(u:User{}) RETURN `
-    )
-
-}
-///
+    const session=neo4jdbconnection.session();
+    try{
+        const results=await session.run(
+        `MATCH(n) DETACH DELETE (n)`
+        );
+        session.close();
+        return 'All nodes are deleted successfully';
+    }
+    catch( err){
+        console.error('Cant delete the all noded due to ', err);
+    }
+    }
 //app.post('/api/know', function(req, res) {
   //  req.accepts('application/json');
     //db.cypherQuery('MATCH (a:Person { name: "' + req.body.name1 + '" }), (b:Person { name: "' + req.body.name2 + '" }) CREATE (a)-[:KNOWS]->(b)',
@@ -135,7 +236,7 @@ module.exports = {
     add_user,
     add_movie,
     add_watchlist,
-    add_relationship_users,
+ 
 
     get_single_user_by_name,
     get_multiple_user_by_name,
@@ -144,10 +245,20 @@ module.exports = {
     update_movie,
 
     delete_all_nodes,
-    delete_single_user,
+    delete_user,
+    delete_all_users,
+    delete_movie,
+    delete_all_movie,
+    delete_watchlist,
+    delete_all_watchlist,
 
-    delete_single_movie,
+    user_follows_user,
+    user_follows_watchlist,
+    user_rates_movie,
     user_unfollow_user,
-    get_total_followers,
-    
+    user_unfollow_watchlist,
+    user_unrate_movie,
+    user_delete_watchlist,
+
+    get_total_followers,    
 };
