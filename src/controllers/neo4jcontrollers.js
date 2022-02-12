@@ -1,3 +1,11 @@
+// ******************************************
+//              Connect to Neo4j Database
+// ******************************************
+let neo4j = require('neo4j-driver');
+let {creds } = require("./../config/noe4jcredentials");
+let neo4jdbconnection = neo4j.driver(creds.bolt_url, neo4j.auth.basic(creds.neo4j_username, creds.neo4j_password));
+//************************************************ */
+
 //??
 async function deleteMovie(req, res) {
     try {

@@ -1,8 +1,11 @@
-//
+// ******************************************
+//              Connect to Neo4j Database
+// ******************************************
 let neo4j = require('neo4j-driver');
 let {creds } = require("./../config/noe4jcredentials");
 let neo4jdbconnection = neo4j.driver(creds.bolt_url, neo4j.auth.basic(creds.neo4j_username, creds.neo4j_password));
-
+//************************************************ */
+//
 /////get all nodes in the neo4j databse.
 async function count_all_nodes() {
     let session = neo4jdbconnection.session();
@@ -17,7 +20,7 @@ async function count_all_nodes() {
 //    Basic  Relations in the Neo4j Database     *****
 //                                                    
 // ***************************************************
-//user follows user`    
+//user follows user    
 async function user_follows_user(user1_id,user2_id){
 let session=neo4jdbconnection.session();
     await session.run(
@@ -35,25 +38,33 @@ await session.run(
 session.close;
 return `user of id: ${user_id} starst to follow a watchlist of id:`;
 }
-//  rates a movie
-async function user_rates_movie(user_id,movie_id){
+// user rates a movie
+async function user_rating_movie(user_id,movie_id){
 let session=neo4jdbconnection.session();
 await session.run(
-    `MERGE(u:User{"${user_id}"}) MERGE(m:Movie"${movie_id}") `
-
+   //`MATCH(m:Movie{movie_id:"${movie_id}"})`
+    `MERGE(u:User{"${user_id}"}) MERGE(m:Movie"${movie_id}") MERGE(u)-[rtf:RATING]->(m)`
 );
 session.close; 
+return `user of id: ${user_id} rates a movie of id: ${movie_id}`;
 }
-
-/// get single user by name
+//user creates watchlist 
+async function user_create_watchlist(user_id,watchlist_id){
+    let session=neo4jdbconnection.session();
+    await session.run(
+    `MERGE(u:User{"${user_id}"}) MERGE(w:Watchlist{"${watchlist_id}"}) MERGE(u)-[rtf:CREATES]->(w) `
+    );
+}
+// get single user by name
 async function get_single_user_by_name(){
     let session = neo4jdbconnection.session();
     await session.run(
 
+
     );
     session.close;
 }
-///add user node to the databse
+//add user node to the databse
 async function add_user (personName) {
     let session = neo4jdbconnection.session();
     try {
@@ -68,7 +79,7 @@ async function add_user (personName) {
         //return result;
     }
 }
-///add a movie node  to the neo4j database
+//add a movie node  to the neo4j database
 async function add_movie (movie_id) {
     let session = neo4jdbconnection.session();
     try {
@@ -83,16 +94,16 @@ async function add_movie (movie_id) {
         //return result;
     }
 }
-///add a watchlist node to the databse.
+//add a watchlist node to the databse.
 async function add_watchlist(watchlistID){
     const session =neo4jdbconnection.session();
     await session.run(
         `MERGE (w:Watchlist{id:"${watchlistID}"} RETURN r) `
      );
      session.close();
-     return `a watch list with id ${watchlistID} is created successfully`;
+     return `A watch list with id ${watchlistID} is created successfully`;
 }
-///get multiple users by name
+//get multiple users by name
 async  function get_multiple_user_by_name(){
     let session = neo4jdbconnection.session();   
     await session.run(
@@ -100,7 +111,7 @@ async  function get_multiple_user_by_name(){
     );
     session.close();
 }
-///get the total number of followers of a user
+//get the total all of the followers of a user
 async function get_total_followers(userid){
     let session=neo4jdbconnection.session();
     try{
@@ -117,14 +128,17 @@ async function get_total_followers(userid){
         console.error('Cant get the total users due to ',err);
     }
 }
-
 //delete an individual user  node from database 
 async function delete_user(userid){
     const session =neo4jdbconnection.session();
     const result =await  session.run(
-        `MATCH(u:User{${userid}) DELETE `
+        `MATCH(u:User{${userid}) DELETE u`
     );
     session.close();
+}
+//delete movie
+async function delete_movie(){
+
 }
 
 //user un-follows user
@@ -231,15 +245,26 @@ async function delete_all_nodes(){
       //});
   //});
 ///remove a person
+
+//You can tweak this code if it works for you
+//UNION QUERY SUGGESTED RECIEPES
+`MATCH (user:User {id:"61e06691c958cbd19baf4843"}) WITH (user)  CALL { 
+    MATCH (user)-[:FOLLOWS]->(user2:User)-[:FOLLOWS]->(user3:User), (user3)-[:FOLLOWS]->(:User)-[:LIKES]->(recipe:Recipe)
+RETURN 'suggested' as type, recipe.id AS SuggestedRecipes, count(*) AS Strength
+UNION  MATCH (user)-[:LIKES]->(:Recipe)<-[:LIKES]-(otherUser:User),
+(otherUser)-[:LIKES]->(otherRecipe:Recipe)
+RETURN 'otherSuggested' as type, otherRecipe.id AS SuggestedRecipes, count(*) AS Strength
+} RETURN type, SuggestedRecipes, Strength ORDER BY Strength DESC`
+
 module.exports = {
     count_all_nodes,
     add_user,
     add_movie,
-    add_watchlist,
- 
+    add_watchlist, 
 
-    get_single_user_by_name,
-    get_multiple_user_by_name,
+   get_user,
+   get_movie,
+   get_watchlist,
 
     update_user,
     update_movie,
@@ -254,7 +279,9 @@ module.exports = {
 
     user_follows_user,
     user_follows_watchlist,
-    user_rates_movie,
+    user_rating_movie,
+    user_create_watchlist,
+
     user_unfollow_user,
     user_unfollow_watchlist,
     user_unrate_movie,
