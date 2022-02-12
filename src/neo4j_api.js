@@ -14,7 +14,39 @@ async function count_all_nodes() {
     session.close();
     console.log("RESULT", (!num_nodes ? 0 : num_nodes.records.length));
     return (!num_nodes ? 0 : num_nodes.records.length);
-};
+}
+//
+async function count_all_user(){
+    const session=neo4jdbconnection.session();
+    const num_users=await session.run(
+    `MATCH(u:User) RETURN COUNT(u) AS NUM_USERS`
+);
+session.close();
+console.log("Total Users:",(num_users ? 0 : num_users.records.length));
+return (! num_users ? 0 : num_users.length);
+}
+//all movies
+async function count_all_movie(){
+    const session=neo4jdbconnection.session();
+    const num_movies=await session.run(
+    `MATCH(m:Movie) RETURN COUNT(m) AS NUM_MOVIES`
+);
+session.close();
+console.log("Total Movies:",(num_movies ? 0 : num_movies.records.length));
+return (!num_movies ? 0 : num_movies.length);
+}
+//all watchlists
+async function count_all_watchlist(){
+    const session=neo4jdbconnection.session();
+    const num_watchlist=await session.run(
+    `MATCH(w:Watchlist) RETURN COUNT(w) AS NUM_WATCHLIST`
+);
+session.close();
+console.log("Total Watchlist:",(num_watchlist ? 0 : num_watchlist.records.length));
+return (!num_watchlist ? 0 : num_watchlist.length);    
+
+}
+
 // ***************************************************
 //                                                    
 //    Basic  Relations in the Neo4j Database     *****
@@ -111,8 +143,8 @@ async  function get_multiple_user_by_name(){
     );
     session.close();
 }
-//get the total all of the followers of a user
-async function get_total_followers(userid){
+//get all of the followers of a user
+async function get_total_followers_user(userid){
     let session=neo4jdbconnection.session();
     try{
         const results =await session.run(
@@ -128,19 +160,72 @@ async function get_total_followers(userid){
         console.error('Cant get the total users due to ',err);
     }
 }
-//delete an individual user  node from database 
-async function delete_user(userid){
+//get all the followres of a watchlist
+async function get_total_followers_watchlist(watchlist_id){
+    let session=neo4jdbconnection.session();
+    try{
+        const results =await session.run(
+            `MATCH(wl:Watchlist{id:"${watchlist_id}"})<-[FOLLOWS]-() RETURN COUNT(FOLLOWS) AS FOLLOWERS `
+        );
+        session.close();
+        return results.records.map((r)=>{
+        const numfollowers=r.get('FOLLOWERS')
+        return numfollowers.low
+        })
+    }
+    catch(err){
+        console.error('Cant get the total users due to ',err);
+    }
+}
+//get_total_rating_movie
+async function get_total_rating_movie(){
+    let session=neo4jdbconnection.session();
+    try{
+        const results =await session.run(
+            `MATCH(u:User{id:"${watchlist_id}"})<-[FOLLOWS]-() RETURN COUNT(FOLLOWS) AS FOLLOWERS `
+        );
+        session.close();
+        return results.records.map((r)=>{
+        const numfollowers=r.get('FOLLOWERS')
+        return numfollowers.low
+        })
+        }
+    catch(err){
+        console.error('Cant get the total users due to ',err);
+    }
+}
+//
+//delete an individual user node along side its relations from database 
+async function delete_user(user_id){
     const session =neo4jdbconnection.session();
     const result =await  session.run(
-        `MATCH(u:User{${userid}) DELETE u`
+        `MATCH(u:User{${user_id}) DETACH DELETE u`
     );
     session.close();
+    return `a user with id: ${user_id} is deleted.`;
 }
-//delete movie
-async function delete_movie(){
+//
+//delete a movie
+async function delete_movie(movie_id){
+    const session=neo4jdbconnection.session();
+    await session.run(
+            `MATCH(m:Movie{"${movie_id}"}) DETACH DELETE m`
+    );
+    session.close();
+    return `a movie with id: ${movie_id} is deleted.`;
 
 }
-
+//
+//delete a watchlist 
+async function delete_watchlist(watchlist_id){
+    const session=neo4jdbconnection.session();
+    await session.run(
+        `MATCH(w:Watchlist{"${watchlist_id}"}) DETACH DELETE w`
+    )
+    session.close();
+    return `a watchlist with id: ${watchlist_id} is deleted.`
+}
+//
 //user un-follows user
  async function user_unfollow_user(user1_id,user2_id){
     const session=neo4jdbconnection.session();
@@ -185,6 +270,15 @@ async function update_movie(){
 
     );
 }
+//update watchlist
+async function update_watchlist(watchlist_id){
+    const session=neo4jdbconnection.session();
+    await session.run(
+        `MERGE(w:Watchlist({"${watchlist_id}"}))
+        SET `
+    );
+
+}
 
 
 
@@ -219,8 +313,6 @@ async function delete_all_watchlist(){
     );
 
 }
-
-
 //delete all nodes form neo4j databse
 async function delete_all_nodes(){
     const session=neo4jdbconnection.session();
@@ -235,6 +327,7 @@ async function delete_all_nodes(){
         console.error('Cant delete the all noded due to ', err);
     }
     }
+    //
 //app.post('/api/know', function(req, res) {
   //  req.accepts('application/json');
     //db.cypherQuery('MATCH (a:Person { name: "' + req.body.name1 + '" }), (b:Person { name: "' + req.body.name2 + '" }) CREATE (a)-[:KNOWS]->(b)',
@@ -244,7 +337,7 @@ async function delete_all_nodes(){
         //res.status(404).send();
       //});
   //});
-///remove a person
+//remove a person
 
 //You can tweak this code if it works for you
 //UNION QUERY SUGGESTED RECIEPES
@@ -262,30 +355,34 @@ module.exports = {
     add_movie,
     add_watchlist, 
 
-   get_user,
-   get_movie,
-   get_watchlist,
+    count_all_user,
+    count_all_movie,
+    count_all_watchlist,
 
-    update_user,
-    update_movie,
+   update_user,
+   update_movie,
+   update_watchlist,
+   
+   delete_user,
+   delete_movie,
+   delete_watchlist,
 
-    delete_all_nodes,
-    delete_user,
-    delete_all_users,
-    delete_movie,
-    delete_all_movie,
-    delete_watchlist,
-    delete_all_watchlist,
+   delete_all_nodes,
+   delete_all_users,
+   delete_all_movie,   
+   delete_all_watchlist,
 
-    user_follows_user,
-    user_follows_watchlist,
-    user_rating_movie,
-    user_create_watchlist,
+   user_follows_user,
+   user_follows_watchlist,
+   user_rating_movie,
+   user_create_watchlist,
 
-    user_unfollow_user,
-    user_unfollow_watchlist,
-    user_unrate_movie,
-    user_delete_watchlist,
+   user_unfollow_user,
+   user_unfollow_watchlist,
+   user_unrate_movie,
+   user_delete_watchlist,
 
-    get_total_followers,    
+   get_total_followers_user,  
+   get_total_followers_watchlist ,
+   get_total_rating_movie
 };
