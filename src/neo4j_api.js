@@ -208,7 +208,7 @@ async function delete_user(user_id){
 //delete a movie
 async function delete_movie(movie_id){
     const session=neo4jdbconnection.session();
-    await session.run(
+    await session.run(git c
             `MATCH(m:Movie{"${movie_id}"}) DETACH DELETE m`
     );
     session.close();
@@ -264,9 +264,10 @@ await session.run(
 }
 
 //update movie node details
-async function update_movie(){
+async function update_movie(movie_id){
     const session=neo4jdbconnection.session();
     await session.run(
+        ``
 
     );
 }
@@ -280,13 +281,9 @@ async function update_watchlist(watchlist_id){
 
 }
 
-
-
 //delete  all  users
 async function delete_all_users(){
     const session=neo4jdbconnection.session();
-
-
 }
 // delete_movie,
 async function delete_all_movie(){
@@ -294,8 +291,6 @@ async function delete_all_movie(){
     session.run(
         ``
     );
-
-
 }
 //delete_watchlist
 async function delete_watchlist(){
@@ -311,7 +306,6 @@ async function delete_all_watchlist(){
     session.run(
         ``
     );
-
 }
 //delete all nodes form neo4j databse
 async function delete_all_nodes(){
@@ -328,6 +322,132 @@ async function delete_all_nodes(){
     }
     }
     //
+    //********************************************* //
+    //       Neo4j Queries                         // 
+    //********************************************//
+    //Query 1:- View suggested Watch List
+    //Assumption: to recommened a movie at least two of them should have common watchlist greater than 2
+`
+    MATCH (u1:User)-[f1:FOLLOWS]->(wl1:Watchlist)<-[f2:FOLLOWS]-(u2:User)-[f2w2:FOLLOWS]->(wl2:Watchlist)
+    with u1,u2,count(wl1) AS NumOfSharedWatchlists, 
+    COLLECT(wl1) as SharedWatchlists,wl2
+    WHERE NOT (u1)-[:FOLLOWS]-> (wl2) AND NumOfSharedWatchlists > 2
+    RETURN u1.name AS FirstUser,u2.name AS SecondUser,
+    [x IN SharedWatchlists | x.name] AS SharedWatchlists, wl2.name AS RecommendedWatchList
+    ORDER BY RecommendedWatchList
+    DESC
+    LIMIT 5
+`
+    //Query 2:- View suggested user profiles that follow the same Watchlists you do (follow).
+` 
+    MATCH(u1:User)-[:FOLLOW]->(wx:Watchlist)<-[:FOLLOW]-(u2:User) 
+    with u1.name AS ME, u2.name AS CoFollowerName,COUNT(u2) as NumCommonWatchlist
+    RETURN ME ,CoFollowerName, NumCommonWatchlist
+    ORDER BY NumCommonWatchlist
+    DESC
+    LIMIT 16
+`
+    //Query 3:- View suggested MOVIES based on their occurrence on the Watchlists of users you follow.
+`   MATCH (u1:User)-[f1:FOLLOWS]->(u2:User)->[:FOLLOW]-(wx:Watchlist)
+    with u1,u2,wx        
+`
+    //Query 4:- Retrieve a user’s own watchList.
+    // 
+    //4.1 To retrive all the watchlist the user is following 
+`    MATCH(u1:User)-[f:FOLLOW]->(fw:Watchlist)
+        Where NOT (u1)-[:CREATE]->(fw:Watchlist)
+        return count(fw) AS WatchlistsYouFollow
+`
+
+    //4.2 To retrieve all the watchlist the user has created 
+`   MATCH(u1:User{id:{'user_id'}})-[f:CREATE ]->(fc:Watchlist)
+    Where NOT (u1)-[:FOLLOW]->(fc:Watchlist)
+    return count(fc) AS WatchlistsYouCreate
+`
+    //Query 5:- Find the most active users based on the number of followers of their watchlists.
+    //the active users are in the list 'u1.name'
+`   MATCH (u1:User)-[f1]->(w:Watchlist)<-[f2]-(u2:User)
+    with *
+    WHERE
+    type (f1) in ["CREATE"] AND 
+    type (f2) in ["FOLLOW"] AND
+    NOT (u1)-[:FOLLOW]-(w) AND
+    NOT (u2)-[:CREATE]-(w) AND
+    RETURN u1.name AS YOU, w.title AS TitleOfYourWatchlist, 
+    COLLECT(u2.name) AS WatchlistFollowers, count(f2) AS NumFollowers
+    ORDER BY NumFollowers
+    DESC
+    LIMIT 10
+`
+    //NB: an analogy of Query 5 can be tested on the movies dataset in the sandbox project
+`   MATCH (u1:Person)-[w]->(m:Movie)<-[ac]-(u2:Person)
+    with *
+    WHERE 
+    type (w) in ["WROTE"] 	  AND 
+    type(ac) in ["ACTED_IN"] AND
+    NOT (u1)-[:DIRECTED]-(m) AND 
+    NOT (u1)-[:PRODUCED]-(m) AND 
+    NOT (u2)-[:DIRECTED]-(m) AND 
+    NOT (u2)-[:PRODUCED]-(m) AND
+    NOT (u2)-[:WROTE]-(m)
+    RETURN  u1.name AS YOU,m.title AS TitleOfMovieYouWrote,collect(u2.name) AS ListOfActors, 
+    COUNT (ac) AS NumActors
+    ORDER BY NumActors
+    DESC
+    LIMIT 10
+`
+    //Query 6:- Find the most followed Watch Lists.
+`   MATCH(u1:User)-[f]->(wx:Watchlist)
+    with *
+    where type(f) in ["FOLLOW"] AND NOT type (f) in ["CREATE",""]
+    RETURN wx.title AS WatchlistName, COUNT(f) AS NumFollowers
+    ORDER BY NumFollowers
+    DESC
+    LIMIT 10        
+`
+// I tried the analogy of Query 6 in the Movies dataset, sandbox project.
+`   MATCH(p:Person)-[f]-(m:Movie)
+    with *
+    where type(f) in ["ACTED_IN"] AND NOT type (f) in ["WROTE","REVIEWED","PRODUCED","FOLLOWS","DIRECTED"]
+    RETURN m.title AS MovieTitle,COUNT(f) AS NumActors
+    ORDER BY NumActors
+    DESC
+    LIMIT 10
+`
+
+    //Query 7:- Find the k top movies with the highest/lowest user ratings.
+    // say k=10, th top k movies with highest rating are gonna found by the following Cypher query
+    // and the lowest k movies can be found by making the the ORDER BY from DESC to ASC
+    // for the top k rated movies: 
+`
+    MATCH(u1:User)-[f]->(wx:Watchlist)
+    WITH  *
+    WHERE type(f) in ["FOLLOW"] AND NOT type(f) IN ["CREATE","OCCURS_IN"]
+    RETURN wx.title AS MovieTitle,wx.rating AS RATING 
+    ORDER BY RATING
+    DESC
+    LIMIT 10
+
+`
+//Query 7:- for the lowest k rated movies 
+`
+    MATCH(p:Person)-[f]->(m:Movie)
+    with *
+    where type(f) in ["REVIEWED"] AND NOT type(f) in ["WROTE","FOLLOWS","ACTED_IN","DIRECTED","PRODUCED"]
+    return m.title AS MovieTitle, f.rating AS RATING ORDER BY RATING
+    ASC
+    LIMIT 10
+`
+// the analogy of Query 7 can be found using  the below query
+`
+    MATCH(p:Person)-[f]->(m:Movie)
+    with *
+    where type(f) in ["REVIEWED"] AND NOT type(f) in ["WROTE","FOLLOWS","ACTED_IN","DIRECTED","PRODUCED"]
+    return m.title AS MovieTitle, f.rating AS RATING ORDER BY RATING
+    DESC
+    LIMIT 10
+`
+
 //app.post('/api/know', function(req, res) {
   //  req.accepts('application/json');
     //db.cypherQuery('MATCH (a:Person { name: "' + req.body.name1 + '" }), (b:Person { name: "' + req.body.name2 + '" }) CREATE (a)-[:KNOWS]->(b)',
@@ -337,17 +457,18 @@ async function delete_all_nodes(){
         //res.status(404).send();
       //});
   //});
-//remove a person
-
 //You can tweak this code if it works for you
 //UNION QUERY SUGGESTED RECIEPES
-`MATCH (user:User {id:"61e06691c958cbd19baf4843"}) WITH (user)  CALL { 
-    MATCH (user)-[:FOLLOWS]->(user2:User)-[:FOLLOWS]->(user3:User), (user3)-[:FOLLOWS]->(:User)-[:LIKES]->(recipe:Recipe)
+`
+MATCH (user:User {id:"61e06691c958cbd19baf4843"}) WITH (user)  CALL { 
+MATCH (user)-[:FOLLOWS]->(user2:User)-[:FOLLOWS]->(user3:User), (user3)-[:FOLLOWS]->(:User)-[:LIKES]->(recipe:Recipe)
 RETURN 'suggested' as type, recipe.id AS SuggestedRecipes, count(*) AS Strength
 UNION  MATCH (user)-[:LIKES]->(:Recipe)<-[:LIKES]-(otherUser:User),
 (otherUser)-[:LIKES]->(otherRecipe:Recipe)
 RETURN 'otherSuggested' as type, otherRecipe.id AS SuggestedRecipes, count(*) AS Strength
-} RETURN type, SuggestedRecipes, Strength ORDER BY Strength DESC`
+} RETURN type, SuggestedRecipes, Strength ORDER BY Strength DESC
+
+`
 
 module.exports = {
     count_all_nodes,
