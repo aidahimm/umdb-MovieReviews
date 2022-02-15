@@ -349,7 +349,10 @@ async function delete_all_nodes(){
 `
     //Query 3:- View suggested MOVIES based on their occurrence on the Watchlists of users you follow.
 `   MATCH (u1:User)-[f1:FOLLOWS]->(u2:User)->[:FOLLOW]-(wx:Watchlist)
-    with u1,u2,wx        
+    with u1,u2,wx  
+    .
+    .
+    .      
 `
     //Query 4:- Retrieve a user’s own watchList.
     // 
@@ -469,7 +472,6 @@ RETURN 'otherSuggested' as type, otherRecipe.id AS SuggestedRecipes, count(*) AS
 } RETURN type, SuggestedRecipes, Strength ORDER BY Strength DESC
 
 `
-
 module.exports = {
     count_all_nodes,
     add_user,
