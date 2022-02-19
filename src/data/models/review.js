@@ -3,14 +3,13 @@ const Schema = mongo.Schema;
 
 const reviewSchema = new Schema ({
     review_id:{
-        type: String,
-        required: [true, 'ReviewID is required']
+        type: String
     },
-    reviewer:{
+    user_id:{
         type: String,
         required: [true, 'Reviewer userID is required']
     },
-    movie:{
+    imdb_id:{
         type: String,
         required: [true, 'Movie title is required']
     },
@@ -24,19 +23,14 @@ const reviewSchema = new Schema ({
     },
     review_date:{
         type: Date,
-        default: Date.now()
-    },
-    spoiler_tag:{
-        type: Number,
-        default: 0
+        default: Date.now().toString()
     },
     review_detail:{
         type: String,
         required: [true, 'Review detail is required']
     },
-    helpful:{
-        type: Array,
-        default: [0,0]
+    title:{
+        type: String
     }
 });
 

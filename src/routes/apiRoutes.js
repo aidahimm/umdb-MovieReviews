@@ -4,9 +4,24 @@ const router = express.Router();
 const neo4j_calls = require('./../neo4j_api');
 // src\neo4j_api.js
 const reviewController = require("../controllers/reviewController");
-router.get('/review', (req,res)=>{
+
+router.post('/review', (req,res)=>{
     reviewController.getReview(req,res).then();
 });
+
+router.post('/crtreview', (req,res)=>{
+    reviewController.createReview(req,res).then();
+});
+
+router.post('/movrevs', (req,res)=>{
+    reviewController.findReviewsByMovie(req,res).then();
+});
+
+router.delete('/delreview', (req,res)=>{
+    reviewController.deleteReview(req,res).then();
+});
+
+
 //
 router.get('/admis', (req,res)=>{
     reviewController.getAdmis(req,res).then();
@@ -17,14 +32,14 @@ router.get('/admis', (req,res)=>{
 router.get('/neo4j_get', async function (req, res, next) {
     let result = await neo4j_calls.count_all_nodes();
     console.log("All nodes are", result)
-    res.status(200).send({ result })    //Can't send just a Number; encapsulate with {} or convert to String.     
+    res.status(200).send({ result })    //Can't send just a Number; encapsulate with {} or convert to String.
     return { result };
 })
 
 router.get('/neo4j_', async function (req, res, next) {
     let result = await neo4j_calls.count_all_nodes();
     console.log("All nodes are", result)
-    res.status(200).send({ result })    //Can't send just a Number; encapsulate with {} or convert to String.     
+    res.status(200).send({ result })    //Can't send just a Number; encapsulate with {} or convert to String.
     return { result };
 })
 /////

@@ -3,7 +3,7 @@ const userService = require("../data/services/userService");
 
 async function findUserByID (req, res) {
     try {
-        let user = await userService.findUserByID(req.body.userID);
+        let user = await userService.findUserByID(req.body.user_id);
         return res.status(200).json({ user: user, message: "Task executed successfully"});
 
     } catch (e) {
@@ -33,7 +33,7 @@ async function findUsersByCountry (req, res) {
 
 async function registerUser (req, res) {
     try {
-        await userService.registerUser(req.body.userID, req.body.email, req.body.password, req.body.name, req.body.surname, req.body.country, req.body.dob);
+        await userService.registerUser(req.body.user_id, req.body.email, req.body.password, req.body.gender, req.body.name, req.body.surname, req.body.country, req.body.dob);
         return res.status(200).json({ message: "Task executed successfully"});
 
     } catch (e) {
@@ -43,7 +43,7 @@ async function registerUser (req, res) {
 
 async function loginUser (req, res) {
     try {
-        await userService.loginUser(req.body.userID, req.body.password);
+        await userService.loginUser(req.body.user_id, req.body.password);
         return res.status(200).json({ message: "Task executed successfully"});
 
     } catch (e) {
@@ -53,7 +53,7 @@ async function loginUser (req, res) {
 
 async function updateUserProfile (req,res){
     try {
-        await userService.updateUserProfile(req.body.userID, req.body.email, req.body.password, req.body.name, req.body.surname, req.body.country, req.body.dob);
+        await userService.updateUserProfile(req.body.user_id, req.body.email, req.body.password, req.body.gender, req.body.name, req.body.surname, req.body.country, req.body.dob);
         return res.status(200).json({ message: "Task executed successfully"});
 
     }catch (e) {
@@ -63,7 +63,7 @@ async function updateUserProfile (req,res){
 
 async function deleteUser (req, res) {
     try {
-        await userService.deleteUser(req.body.userID);
+        await userService.deleteUser(req.body.user_id);
         return res.status(200).json({ message: "Task executed successfully"});
 
     } catch (e) {
