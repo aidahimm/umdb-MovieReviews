@@ -5,7 +5,7 @@ async function findUserByID(uid){
     try {
         // Connect to the MongoDB cluster
         let db = await mongoDriver.mongo();
-        return await db.collection("users").findOne({userID: uid});
+        return await db.collection("users").findOne({user_id: uid});
     } catch (e) {
         console.log(e);
     }
@@ -33,12 +33,12 @@ async function findUsersByCountry(country){
     }
 }
 
-async function registerUser (uid, email, pwd, name, surname, country, dob){
+async function registerUser (uid, email, pwd, gender, name, surname, country, dob){
     try{
         var db = await mongoDriver.mongo();
         let usr = await db.collection("users").findOne(
         {$or: [
-                {userID: uid},
+                {user_id: uid},
                 {email: email}
             ]});
         console.log(usr)
@@ -47,6 +47,7 @@ async function registerUser (uid, email, pwd, name, surname, country, dob){
                 userID: uid,
                 email: email,
                 password: pwd,
+                gender: gender,
                 name: name,
                 surname: surname,
                 country: country,
@@ -67,7 +68,7 @@ async function loginUser (uid, pwd){
         let usr = await db.collection("users").findOne(
             {
                 $and: [
-                    {userID: uid},
+                    {user_id: uid},
                     {password: pwd}
                 ]
             });
@@ -79,18 +80,19 @@ async function loginUser (uid, pwd){
     }
 }
 
-async function updateUserProfile (uid, newEmail, newPwd, newName, newSurname, newCountry, newDob) {
+async function updateUserProfile (uid, newEmail, newPwd, newGender, newName, newSurname, newCountry, newDob) {
     try{
         let newProfileInfo = {
             email: newEmail,
             password: newPwd,
+            gender: newGender,
             name: newName,
             surname: newSurname,
             country: newCountry,
             dob: newDob
         }
         let db = await mongoDriver.mongo();
-        await db.collection("users").updateOne({userID: uid}, {$set: newProfileInfo});
+        await db.collection("users").updateOne({user_id: uid}, {$set: newProfileInfo});
     } catch (e) {
         console.log(e);
     }
@@ -99,7 +101,7 @@ async function updateUserProfile (uid, newEmail, newPwd, newName, newSurname, ne
 async function deleteUser (uid){
     try{
         let db = await mongoDriver.mongo();
-        await db.collection("users").deleteOne({userID: uid});
+        await db.collection("users").deleteOne({user_id: uid});
     } catch (e) {
         console.log(e);
     }

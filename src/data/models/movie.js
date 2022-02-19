@@ -3,29 +3,48 @@ const mongo = require("mongoose");
 const Schema = mongo.Schema;
 
 const movieSchema = new Schema ({
-    movieID:{
-        type: Number,
-        required: [true, 'MovieID is required']
+    budget:{
+        type: Number
     },
-    title:{
-        type: String,
-        required: [true, 'Title is required']
+    cast:{
+        type: Array
     },
     genres:{
-        type: String,
-        required: [true, 'Genre is required']
+        type: Array
     },
-    imdbId:{
+    imdb_id:{
         type: String,
         required: [true, 'ImdbId is required']
     },
-    avgRating:{
-        type: Number,
-        required: [false]
+    overview:{
+        type: String
     },
-    numVotes:{
-        type: Number,
-        required: [false]
+    popularity:{
+        type: Number
+    },
+    poster_path:{
+        type: String
+    },
+    release_date:{
+        type: String
+    },
+    revenue:{
+        type: Number
+    },
+    runtime:{
+        type: Number
+    },
+    spoken_language:{
+        type: Array
+    },
+    title:{
+        type: String
+    },
+    vote_average:{
+        type: Number
+    },
+    vote_count:{
+        type: Number
     }
 });
 const Movie = mongo.model('movie', movieSchema);

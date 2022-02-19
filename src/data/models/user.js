@@ -3,7 +3,7 @@ const mongo = require("mongoose");
 const Schema = mongo.Schema;
 
 const userSchema = new Schema ({
-    userID:{
+    user_id:{
         type: String,
         required: [true, 'UserID is required']
     },
@@ -14,6 +14,10 @@ const userSchema = new Schema ({
     password:{
         type: String,
         required: [true, 'Password is required']
+    },
+    gender:{
+        type: String,
+        required: [true, 'gender is required']
     },
     name:{
         type: String,
@@ -31,7 +35,7 @@ const userSchema = new Schema ({
         type: String,
         required: [false]
     },
-    nFollowers: {
+    numFollowers: {
         type: Number,
         default: 0
     },
