@@ -3,7 +3,6 @@ const router = express.Router();
 //
 const neo4j_calls = require('./../neo4j_api');
 // src\neo4j_api.js
-
 const reviewController = require("../controllers/reviewController");
 router.get('/review', (req,res)=>{
     reviewController.getReview(req,res).then();

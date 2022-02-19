@@ -52,15 +52,18 @@ return (!num_watchlist ? 0 : num_watchlist.length);
 //    Basic  Relations in the Neo4j Database     *****
 //                                                    
 // ***************************************************
-//user follows user    
+//user follows user   
 async function user_follows_user(user1_id,user2_id){
+
 let session=neo4jdbconnection.session();
     await session.run(
-        `MERGE(u1:User{id:"${user1_id}"}) MERGE(u2:User{id:"${user2_id}"}) MERGE(u1)-[rtf:FOLLOWS]->(u1)`
+    `MATCH (u1:User{id:"${user1_id}"}),(u2:User{id:"${user2_id}"})
+     MERGE(u1)-[:FOLLOWS]->(u2)`
     );
     session.close;
     return `user of id: ${user1_id} starts to Follow user of id:  ${user2_id}`;
 }
+//
 //user follows a watchlist
 async function user_follows_watchlist(user_id,watchlist_id){
 let session=neo4jdbconnection.session();
@@ -383,6 +386,7 @@ async function delete_all_nodes(){
     LIMIT 10
 `
     //NB: an analogy of Query 5 can be tested on the movies dataset in the sandbox project
+    //[https://sandbox.neo4j.com/]
 `   MATCH (u1:Person)-[w]->(m:Movie)<-[ac]-(u2:Person)
     with *
     WHERE 
@@ -408,7 +412,7 @@ async function delete_all_nodes(){
     DESC
     LIMIT 10        
 `
-// I tried the analogy of Query 6 in the Movies dataset, sandbox project.
+// I tried the analogy of Query 6 in the Movies dataset, sandbox project [https://sandbox.neo4j.com/].
 `   MATCH(p:Person)-[f]-(m:Movie)
     with *
     where type(f) in ["ACTED_IN"] AND NOT type (f) in ["WROTE","REVIEWED","PRODUCED","FOLLOWS","DIRECTED"]
@@ -419,9 +423,9 @@ async function delete_all_nodes(){
 `
 
     //Query 7:- Find the k top movies with the highest/lowest user ratings.
-    // say k=10, th top k movies with highest rating are gonna found by the following Cypher query
-    // and the lowest k movies can be found by making the the ORDER BY from DESC to ASC
-    // for the top k rated movies: 
+    // say k=10, the top k movies with highest rating are gonna found by the following Cypher query
+    // and the lowest k movies can be found by changing the the ORDER BY from DESC to ASC
+    // Hence,for the top k rated movies: 
 `
     MATCH(u1:User)-[f]->(wx:Watchlist)
     WITH  *
@@ -450,7 +454,6 @@ async function delete_all_nodes(){
     DESC
     LIMIT 10
 `
-
 //app.post('/api/know', function(req, res) {
   //  req.accepts('application/json');
     //db.cypherQuery('MATCH (a:Person { name: "' + req.body.name1 + '" }), (b:Person { name: "' + req.body.name2 + '" }) CREATE (a)-[:KNOWS]->(b)',
@@ -462,6 +465,9 @@ async function delete_all_nodes(){
   //});
 //You can tweak this code if it works for you
 //UNION QUERY SUGGESTED RECIEPES
+
+
+//
 `
 MATCH (user:User {id:"61e06691c958cbd19baf4843"}) WITH (user)  CALL { 
 MATCH (user)-[:FOLLOWS]->(user2:User)-[:FOLLOWS]->(user3:User), (user3)-[:FOLLOWS]->(:User)-[:LIKES]->(recipe:Recipe)
