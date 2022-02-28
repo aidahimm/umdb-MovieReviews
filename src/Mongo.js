@@ -2,7 +2,6 @@ const {MongoClient} = require("mongodb");
 
 var client = null;
 var db;
-
 async function mongo() {
     if (client == null) {
 

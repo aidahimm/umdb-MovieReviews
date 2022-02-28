@@ -35,13 +35,6 @@ router.get('/neo4j_get', async function (req, res, next) {
     res.status(200).send({ result })    //Can't send just a Number; encapsulate with {} or convert to String.
     return { result };
 })
-
-router.get('/neo4j_', async function (req, res, next) {
-    let result = await neo4j_calls.count_all_nodes();
-    console.log("All nodes are", result)
-    res.status(200).send({ result })    //Can't send just a Number; encapsulate with {} or convert to String.
-    return { result };
-})
 /////
 //create a single user in the neo4j database
 router.post('/neo4j_post', async (req, res, next) => {
