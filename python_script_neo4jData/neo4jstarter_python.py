@@ -10,12 +10,6 @@ db_username='neo4j'
 db_passwrd='123'
 conn = GraphDatabase.driver(db_uri, auth=(db_username, db_passwrd))
 #
-#def dummy():
-    #WITH "file:///test_data.csv" AS uri
-    #LOAD CSV WITH HEADERS FROM uri AS row
-    # MERGE (c:Watchlist {id:row.watchlistnames})
-    # SET c.name = row.watchlistnames
-    # SET c.tracks=row.tracks
 def watchlistname_generator():
     watchlistnames = ''.join(secrets.choice(string.ascii_letters + string.digits) for x in range(10))  
     return watchlistnames

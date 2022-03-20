@@ -22,4 +22,3 @@ async function getAdmins(){
     }
 }
 module.exports = {getAdmins};
-

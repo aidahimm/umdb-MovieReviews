@@ -2,14 +2,13 @@
 const express = require('express');
 const app = express();
 const neo4j = require ('neo4j-driver');
-
+//
 //Bring all the route files here and assign to variables.
 const apiRoutes = require("./routes/apiRoutes");
 const userRoutes = require("./routes/userRoutes");
 const movieRoutes = require("./routes/movieRoutes");
 const adminsRoutes = require("./routes/adminsRoutes");
-
-
+//
 //Support the form-urlencoded format for the request body
 app.use(express.urlencoded({extended: true}));
 //Support JSON format for req/res

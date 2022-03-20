@@ -10,7 +10,7 @@ async function getReview (req, res) {
         return res.status(400).json({ status: 400, message: e.message });
     }
 }
-
+//
 async function findReviewsByMovie (req, res) {
     try {
         let reviews = await reviewService.findReviewsByMovie(req.body.imdb_id);
@@ -20,7 +20,7 @@ async function findReviewsByMovie (req, res) {
         return res.status(400).json({ status: 400, message: e.message });
     }
 }
-
+//
 async function createReview (req, res) {
     try {
         let review = await reviewService.createReview(req.body.user_id, req.body.imdb_id, req.body.title, req.body.rating, req.body.review_summary, req.body.review_detail);
@@ -30,7 +30,7 @@ async function createReview (req, res) {
         return res.status(400).json({ status: 400, message: e.message });
     }
 }
-
+//
 async function deleteReview (req, res) {
     try {
         await reviewService.deleteReview(req.body.review_id);
