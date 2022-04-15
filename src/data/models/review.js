@@ -2,14 +2,14 @@ const mongo = require("mongoose");
 const Schema = mongo.Schema;
 
 const reviewSchema = new Schema ({
-    review_id:{
+    _id:{
         type: String
     },
-    user_id:{
+    userId:{
         type: String,
         required: [true, 'Reviewer userID is required']
     },
-    imdb_id:{
+    movieId:{
         type: String,
         required: [true, 'Movie title is required']
     },

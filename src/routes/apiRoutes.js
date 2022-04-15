@@ -14,7 +14,7 @@ router.post('/crtreview', (req,res)=>{
 });
 
 router.post('/movrevs', (req,res)=>{
-    reviewController.findReviewsByMovie(req,res).then();
+    reviewController.findReviewsOfMovie(req,res).then();
 });
 //
 router.delete('/delreview', (req,res)=>{

@@ -3,7 +3,7 @@ const router = express.Router();
 const userController = require('../controllers/userController');
 
 router.post('/uid', (req,res)=>{
-    userController.findUserByID(req,res).then();
+    userController.findUserByUsername(req,res).then();
 });
 
 router.post('/usName', (req,res)=>{
@@ -12,6 +12,10 @@ router.post('/usName', (req,res)=>{
 
 router.post('/usCtry', (req,res)=>{
     userController.findUsersByCountry(req,res).then();
+});
+
+router.post('/usNf', (req,res)=>{
+    userController.findUsersByNFollowers(req,res).then();
 });
 
 router.post('/regusr', (req,res)=>{

@@ -12,7 +12,7 @@ const movieSchema = new Schema ({
     genres:{
         type: Array
     },
-    imdb_id:{
+    _id:{
         type: String,
         required: [true, 'ImdbId is required']
     },
@@ -34,7 +34,7 @@ const movieSchema = new Schema ({
     runtime:{
         type: Number
     },
-    spoken_language:{
+    spoken_languages:{
         type: Array
     },
     title:{
@@ -45,6 +45,10 @@ const movieSchema = new Schema ({
     },
     vote_count:{
         type: Number
+    },
+    reviews:{
+        type: Array,
+        default: []
     }
 });
 const Movie = mongo.model('movie', movieSchema);

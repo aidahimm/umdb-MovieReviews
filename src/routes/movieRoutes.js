@@ -1,4 +1,3 @@
-
 const express = require('express');
 const router = express.Router();
 const movieController = require('../controllers/movieController');
@@ -14,11 +13,35 @@ router.post('/tsearch', (req,res)=>{
 router.post('/gsearch', (req,res)=>{
     movieController.findMovieByGenre(req,res).then();
 });
-
-router.get('/popaggreg', (req,res)=>{
+///
+router.post('/lsearch', (req,res)=>{
+    movieController.findMovieByLanguage(req,res).then();
+});
+///
+router.post('/csearch', (req,res)=>{
+    movieController.findMovieByCast(req,res).then();
+});
+///
+router.post('/datesearch', (req,res)=>{
+    movieController.findMovieByRelDate(req,res).then();
+});
+///
+router.post('/rtsearch', (req,res)=>{
+    movieController.findMovieByRuntime(req,res).then();
+});
+///
+router.post('/popaggreg', (req,res)=>{
     movieController.getPopMovies(req,res).then();
 });
-
+////
+router.post('/topyaggreg', (req,res)=>{
+    movieController.getTopMoviesByYear(req,res).then();
+});
+////
+router.post('/topygaggreg', (req,res)=>{
+    movieController.getTopMoviesByYearAndGenre(req,res).then();
+});
+///
 router.post('/popGaggreg', (req,res)=>{
     movieController.getPopMoviesByGenre(req,res).then();
 });

@@ -1,9 +1,9 @@
 const userService = require("../data/services/userService");
 
 
-async function findUserByID (req, res) {
+async function findUserByUsername (req, res) {
     try {
-        let user = await userService.findUserByID(req.body.user_id);
+        let user = await userService.findUserByUsername(req.body.username);
         return res.status(200).json({ user: user, message: "Task executed successfully"});
 
     } catch (e) {
@@ -31,9 +31,19 @@ async function findUsersByCountry (req, res) {
     }
 }
 
+async function findUsersByNFollowers (req, res) {
+    try {
+        let users = await userService.findUsersByNFollowers(req.body.min, req.body.max);
+        return res.status(200).json({ users: users, message: "Task executed successfully"});
+
+    } catch (e) {
+        return res.status(400).json({ status: 400, message: e.message });
+    }
+}
+
 async function registerUser (req, res) {
     try {
-        await userService.registerUser(req.body.user_id, req.body.email, req.body.password, req.body.gender, req.body.name, req.body.surname, req.body.country, req.body.dob);
+        await userService.registerUser(req.body.username, req.body.email, req.body.password, req.body.gender, req.body.name, req.body.surname, req.body.country, req.body.dob);
         return res.status(200).json({ message: "Task executed successfully"});
 
     } catch (e) {
@@ -43,7 +53,7 @@ async function registerUser (req, res) {
 
 async function loginUser (req, res) {
     try {
-        await userService.loginUser(req.body.user_id, req.body.password);
+        await userService.loginUser(req.body.username, req.body.password);
         return res.status(200).json({ message: "Task executed successfully"});
 
     } catch (e) {
@@ -53,7 +63,7 @@ async function loginUser (req, res) {
 
 async function updateUserProfile (req,res){
     try {
-        await userService.updateUserProfile(req.body.user_id, req.body.email, req.body.password, req.body.gender, req.body.name, req.body.surname, req.body.country, req.body.dob);
+        await userService.updateUserProfile(req.body.username, req.body.email, req.body.password, req.body.gender, req.body.name, req.body.surname, req.body.country, req.body.dob);
         return res.status(200).json({ message: "Task executed successfully"});
 
     }catch (e) {
@@ -63,11 +73,11 @@ async function updateUserProfile (req,res){
 
 async function deleteUser (req, res) {
     try {
-        await userService.deleteUser(req.body.user_id);
+        await userService.deleteUser(req.body.username);
         return res.status(200).json({ message: "Task executed successfully"});
 
     } catch (e) {
         return res.status(400).json({ status: 400, message: e.message });
     }
 }
-module.exports = {findUserByID, findUserByNameAndSurname, findUsersByCountry, registerUser, loginUser, updateUserProfile, deleteUser};
+module.exports = {findUserByUsername, findUserByNameAndSurname, findUsersByCountry, findUsersByNFollowers, registerUser, loginUser, updateUserProfile, deleteUser};
