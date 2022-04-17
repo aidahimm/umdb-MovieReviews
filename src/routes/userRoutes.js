@@ -6,15 +6,15 @@ router.post('/uid', (req,res)=>{
     userController.findUserByUsername(req,res).then();
 });
 
-router.post('/usName', (req,res)=>{
+router.post('/uName', (req,res)=>{
     userController.findUserByNameAndSurname(req,res).then();
 });
 
-router.post('/usCtry', (req,res)=>{
+router.post('/uCtry', (req,res)=>{
     userController.findUsersByCountry(req,res).then();
 });
 
-router.post('/usNf', (req,res)=>{
+router.post('/urNf', (req,res)=>{
     userController.findUsersByNFollowers(req,res).then();
 });
 

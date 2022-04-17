@@ -10,16 +10,6 @@ async function findMovieByID (req, res) {
     }
 }
 ///
-async function getPopMoviesByGenre (req, res) {
-    try {
-        let movies = await moviesService.getPopMoviesByGenre(req.body.genre);
-        return res.status(200).json({ movies: movies, message: "Task executed successfully" });
-
-    } catch (e) {
-        return res.status(400).json({ status: 400, message: e.message });
-    }
-}
-
 async function findMovieByApproximateTitle (req, res) {
     try {
         let movies = await moviesService.findMovieByApproximateTitle(req.body.title);
@@ -43,16 +33,6 @@ async function findMovieByGenre (req, res) {
 async function findMovieByRuntime (req, res) {
     try {
         let movies = await moviesService.findMovieByRuntime(req.body.startRuntime, req.body.endRuntime);
-        return res.status(200).json({ movies: movies, message: "Task executed successfully"});
-
-    } catch (e) {
-        return res.status(400).json({ status: 400, message: e.message });
-    }
-}
-///
-async function findMovieByCast (req, res) {
-    try {
-        let movies = await moviesService.findMovieByCast(req.body.cast);
         return res.status(200).json({ movies: movies, message: "Task executed successfully"});
 
     } catch (e) {
@@ -89,16 +69,7 @@ async function createMovie (req,res){
         return res.status(400).json({ status: 400, message: e.message });
     }
 }
-///
-async function updateMovieRating (req, res) {
-    try {
-        await moviesService.updateMovieRating(req.body.movieID, req.body.rating);
-        return res.status(200).json({ message: "Task executed successfully"});
 
-    } catch (e) {
-        return res.status(400).json({ status: 400, message: e.message });
-    }
-}
 ///
 async function deleteMovie(req, res) {
     try {
@@ -122,9 +93,19 @@ async function getPopMovies (req, res) {
     }
 }
 ///
+async function getPopMoviesByGenre (req, res) {
+    try {
+        let movies = await moviesService.getPopMoviesByGenre(req.body.genre, req.body.page);
+        return res.status(200).json({ movies: movies, message: "Task executed successfully" });
+
+    } catch (e) {
+        return res.status(400).json({ status: 400, message: e.message });
+    }
+}
+///
 async function getTopMoviesByYear (req, res) {
     try {
-        let movies = await moviesService.getTopMoviesByYear(req.body.year, req.body.k);
+        let movies = await moviesService.getTopMoviesByYear(req.body.year, req.body.page);
         return res.status(200).json({ movies: movies, message: "Task executed successfully" });
         // return res.render('index', { movies: movies, message: "Task executed successfully" });
 
@@ -134,7 +115,7 @@ async function getTopMoviesByYear (req, res) {
 }
 async function getTopMoviesByYearAndGenre (req, res) {
     try {
-        let movies = await moviesService.getTopMoviesByYear(req.body.year, req.body.k);
+        let movies = await moviesService.getTopMoviesByYearAndGenre(req.body.year, req.body.page, req.body.genre);
         return res.status(200).json({ movies: movies, message: "Task executed successfully" });
         // return res.render('index', { movies: movies, message: "Task executed successfully" });
 
@@ -142,4 +123,4 @@ async function getTopMoviesByYearAndGenre (req, res) {
         return res.status(400).json({ status: 400, message: e.message });
     }
 }
-module.exports = {findMovieByID, findMovieByApproximateTitle, createMovie, findMovieByGenre, findMovieByLanguage,  findMovieByCast, findMovieByRuntime, getTopMoviesByYearAndGenre, findMovieByRelDate, getTopMoviesByYear, updateMovieRating, deleteMovie, getPopMoviesByGenre, getPopMovies};
+module.exports = {findMovieByID, findMovieByApproximateTitle, createMovie, findMovieByGenre, findMovieByLanguage, findMovieByRuntime, getTopMoviesByYearAndGenre, findMovieByRelDate, getTopMoviesByYear, deleteMovie, getPopMoviesByGenre, getPopMovies};

@@ -3,7 +3,7 @@ const reviewService = require("../data/services/reviewService");
 
 async function getReview (req, res) {
     try {
-        let reviews = await reviewService.getReview(req.body._id);
+        let reviews = await reviewService.getReview(req.body._id, req.body.movieId);
         return res.status(200).json({review : reviews, message: "Service Executed Successfully" })
 
     } catch (e) {
@@ -23,7 +23,17 @@ async function findReviewsOfMovie (req, res) {
 //
 async function createReview (req, res) {
     try {
-        let review = await reviewService.createReview(req.body.userId, req.body.movieId, req.body.title, req.body.rating, req.body.review_summary, req.body.review_detail);
+        let review = await reviewService.createReview(req.body.userId, req.body.username, req.body.movieId, req.body.title, req.body.rating, req.body.review_summary, req.body.review_detail);
+        return res.status(200).json({message: "Successfully created review:", review: review })
+
+    } catch (e) {
+        return res.status(400).json({ status: 400, message: e.message });
+    }
+}
+///
+async function editReview (req, res) {
+    try {
+        let review = await reviewService.editReview(req.body._id, req.body.username, req.body.movieId, req.body.rating, req.body.review_summary, req.body.review_detail);
         return res.status(200).json({message: "Successfully created review:", review: review })
 
     } catch (e) {
@@ -41,4 +51,4 @@ async function deleteReview (req, res) {
     }
 }
 
-module.exports = {getReview, createReview, deleteReview, findReviewsOfMovie};
+module.exports = {getReview, createReview, deleteReview, editReview, findReviewsOfMovie};

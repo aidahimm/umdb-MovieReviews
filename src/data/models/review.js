@@ -6,28 +6,26 @@ const reviewSchema = new Schema ({
         type: String
     },
     userId:{
-        type: String,
-        required: [true, 'Reviewer userID is required']
+        type: Number
     },
     movieId:{
-        type: String,
-        required: [true, 'Movie title is required']
+        type: String
+    },
+    reviewer: {
+        type: String
     },
     rating:{
-        type: Number,
-        required: [true, 'Rating is required']
+        type: Number
     },
     review_summary:{
-        type: String,
-        required: [true, 'Review summary is required']
+        type: String
     },
     review_date:{
         type: Date,
         default: Date.now().toString()
     },
     review_detail:{
-        type: String,
-        required: [true, 'Review detail is required']
+        type: String
     },
     title:{
         type: String

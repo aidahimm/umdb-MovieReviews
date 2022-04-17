@@ -45,7 +45,6 @@ async function registerUser (req, res) {
     try {
         await userService.registerUser(req.body.username, req.body.email, req.body.password, req.body.gender, req.body.name, req.body.surname, req.body.country, req.body.dob);
         return res.status(200).json({ message: "Task executed successfully"});
-
     } catch (e) {
         return res.status(400).json({ status: 400, message: e.message });
     }

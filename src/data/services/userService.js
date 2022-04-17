@@ -7,7 +7,7 @@ async function findUserByUsername(username){
         let db = await mongoDriver.mongo();
         return await db.collection("users").findOne({username: username});
     } catch (e) {
-        console.log(e);
+        throw e;
     }
 }
 
@@ -20,7 +20,7 @@ async function findUserByNameAndSurname(name, surname){
                 {surname: {'$regex' : surname, '$options' : 'i'}}
             ]}).toArray();
     } catch (e) {
-        console.log(e);
+        throw e;
     }
 }
 
@@ -29,7 +29,7 @@ async function findUsersByCountry(country){
         let db = await mongoDriver.mongo();
         return await db.collection("users").find({country: country}).toArray();
     } catch (e) {
-        console.log(e);
+        throw e;
     }
 }
 
@@ -40,7 +40,7 @@ async function findUsersByNFollowers(min, max){
             {$match: {numFollowers: {'$gte': min, '$lte': max}}},
             {$sort: {numFollowers: -1}}]).toArray();
     } catch (e) {
-        console.log(e);
+        throw e;
     }
 }
 
@@ -63,14 +63,14 @@ async function registerUser (username, email, pwd, gender, name, surname, countr
                 name: name,
                 surname: surname,
                 country: country,
-                dob: Date.parse(dob)
+                dob: dob
             })
             await db.collection("users").insertOne(newUser);
         }else {
             throw Error("UserID or Email already exists");
         }
     } catch (e) {
-        console.log(e);
+        throw e;
     }
 }
 
@@ -88,7 +88,7 @@ async function loginUser (uid, pwd){
             throw Error("Incorrect UserID or Email");
         }
     }catch (e) {
-        console.log(e);
+        throw e
     }
 }
 
@@ -101,21 +101,21 @@ async function updateUserProfile (username, newEmail, newPwd, newGender, newName
             name: newName,
             surname: newSurname,
             country: newCountry,
-            dob: Date.parse(newDob)
+            dob: newDob
         }
         let db = await mongoDriver.mongo();
         await db.collection("users").updateOne({username: username}, {$set: newProfileInfo});
     } catch (e) {
-        console.log(e);
+        throw e;
     }
 }
 
-async function deleteUser (username){
+async function deleteUser(username){
     try{
         let db = await mongoDriver.mongo();
         await db.collection("users").deleteOne({username: username});
     } catch (e) {
-        console.log(e);
+        throw e;
     }
 }
 

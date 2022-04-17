@@ -18,10 +18,6 @@ router.post('/lsearch', (req,res)=>{
     movieController.findMovieByLanguage(req,res).then();
 });
 ///
-router.post('/csearch', (req,res)=>{
-    movieController.findMovieByCast(req,res).then();
-});
-///
 router.post('/datesearch', (req,res)=>{
     movieController.findMovieByRelDate(req,res).then();
 });
@@ -30,29 +26,25 @@ router.post('/rtsearch', (req,res)=>{
     movieController.findMovieByRuntime(req,res).then();
 });
 ///
-router.post('/popaggreg', (req,res)=>{
+router.post('/pop', (req,res)=>{
     movieController.getPopMovies(req,res).then();
 });
 ////
-router.post('/topyaggreg', (req,res)=>{
+router.post('/topy', (req,res)=>{
     movieController.getTopMoviesByYear(req,res).then();
 });
 ////
-router.post('/topygaggreg', (req,res)=>{
+router.post('/topyg', (req,res)=>{
     movieController.getTopMoviesByYearAndGenre(req,res).then();
 });
 ///
-router.post('/popGaggreg', (req,res)=>{
+router.post('/popg', (req,res)=>{
     movieController.getPopMoviesByGenre(req,res).then();
 });
 
 //////
 router.post('/crtmov', (req,res)=>{
     movieController.createMovie(req,res).then();
-});
-/////////
-router.put('/updmovr', (req,res)=>{
-    movieController.updateMovieRating(req,res).then();
 });
 ////////////
 router.delete('/delmov', (req,res) =>{

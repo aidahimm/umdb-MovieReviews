@@ -12,7 +12,11 @@ router.post('/review', (req,res)=>{
 router.post('/crtreview', (req,res)=>{
     reviewController.createReview(req,res).then();
 });
-
+////
+router.put('/editreview', (req,res)=>{
+    reviewController.editReview(req,res).then();
+});
+///
 router.post('/movrevs', (req,res)=>{
     reviewController.findReviewsOfMovie(req,res).then();
 });
